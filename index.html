@@ -8,6 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -514,6 +515,15 @@ function BracketView({config,matches,setMatches,numRounds}){
     setModalMatch(null);
   };
 
+  const downloadImage=()=>{
+    if(!bracketRef.current) return;
+    html2canvas(bracketRef.current,{backgroundColor:'#02153a',scale:2,useCORS:true}).then(c=>{
+      const a=document.createElement('a');
+      a.href=c.toDataURL('image/png');
+      a.download='bracket.png';
+      a.click();
+    });
+  };
 
   return(
     <div className="bk-layout">
@@ -542,6 +552,7 @@ function BracketView({config,matches,setMatches,numRounds}){
           <button className="action-btn primary" onClick={()=>autoFill(false)}>&#9654; 자동 배치</button>
           <button className="action-btn ghost" onClick={()=>autoFill(true)}>&#8635; 섞기 배치</button>
           <button className="action-btn danger" onClick={clearBracket}>&#10005; 초기화</button>
+          <button className="action-btn ghost" onClick={downloadImage}>&#128247; 이미지 저장</button>
         </div>
       </div>
 
