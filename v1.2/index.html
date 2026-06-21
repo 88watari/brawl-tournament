@@ -466,11 +466,14 @@ function TournamentView({teams}){
     });
   };
 
-  const clearStage=()=>upd(next=>{
-    const s=next[activeIdx];
-    s.byeTeams=s.byeTeams.map(()=>null);
-    s.matches=s.matches.map(m=>({...m,teamA:null,teamB:null,winner:null,loser:null,scoreA:'',scoreB:'',bye:false}));
-  });
+  const clearStage=()=>{
+    if(activeIdx===2)setPjSel([]);
+    upd(next=>{
+      const s=next[activeIdx];
+      s.byeTeams=s.byeTeams.map(()=>null);
+      s.matches=s.matches.map(m=>({...m,teamA:null,teamB:null,winner:null,loser:null,scoreA:'',scoreB:'',bye:false}));
+    });
+  };
 
   const confirmResult=({winner,scoreA,scoreB})=>{
     upd(next=>{

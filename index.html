@@ -498,7 +498,7 @@ function GeneralBracketView({config,matches,setMatches,numRounds}){
   function unpropagate(next,matchId){
     const m=next.find(x=>x.id===matchId);if(!m||m.round===0)return;
     const par=next.find(x=>x.round===m.round-1&&x.pos===(m.pos>>1));
-    if(!par||par.winner)return;
+    if(!par)return;
     if(m.pos%2===0)par.teamA=null;else par.teamB=null;
   }
 
@@ -732,11 +732,14 @@ function BrawlTournamentView({teams}){
       s.matches.forEach(m=>{if(!m.winner){if(!m.teamA&&ti<list.length)m.teamA=list[ti++];if(!m.teamB&&ti<list.length)m.teamB=list[ti++];}});
     });
   };
-  const clearStage=()=>upd(next=>{
-    const s=next[activeIdx];
-    s.byeTeams=s.byeTeams.map(()=>null);
-    s.matches=s.matches.map(m=>({...m,teamA:null,teamB:null,winner:null,loser:null,scoreA:'',scoreB:'',bye:false}));
-  });
+  const clearStage=()=>{
+    if(activeIdx===2)setPjSel([]);
+    upd(next=>{
+      const s=next[activeIdx];
+      s.byeTeams=s.byeTeams.map(()=>null);
+      s.matches=s.matches.map(m=>({...m,teamA:null,teamB:null,winner:null,loser:null,scoreA:'',scoreB:'',bye:false}));
+    });
+  };
   const confirmResult=({winner,scoreA,scoreB})=>{
     upd(next=>{for(const s of next){const m=s.matches.find(x=>x.id===modal.id);if(m){m.winner=winner;m.loser=winner===m.teamA?m.teamB:m.teamA;m.scoreA=scoreA;m.scoreB=scoreB;m.bye=false;break;}}});setModal(null);
   };
