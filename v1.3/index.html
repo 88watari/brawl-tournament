@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>브롤스타즈 토너먼트 2026</title>
+<script>(function(){const _w=console.warn.bind(console),_e=console.error.bind(console);const s=(a)=>a.length>0&&typeof a[0]==='string'&&(a[0].includes('Babel')||a[0].includes('text/babel')||a[0].includes('in-browser'));console.warn=(...a)=>{if(!s(a))_w(...a);};console.error=(...a)=>{if(!s(a))_e(...a);};})();</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0248BB;font-family:'Noto Sans KR',sans-serif;min-height:100vh;color:#fff}
+.bhs{font-family:'Black Han Sans',sans-serif}
+button{cursor:pointer;border:none;outline:none}
+input{outline:none}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:rgba(0,0,0,.2)}
+::-webkit-scrollbar-thumb{background:#FFE234;border-radius:3px}
+/* Header */
+.hdr{position:sticky;top:0;z-index:100;background:rgba(10,28,70,.95);border-bottom:2px solid #FFE234;padding:10px 20px;display:flex;align-items:center;gap:12px;min-height:50px}
+.hdr-title{font-size:19px;color:#FFE234;letter-spacing:1px}
+.hdr-sub{font-size:11px;color:rgba(255,255,255,.5)}
+/* Mode select */
+.mode-wrap{max-width:680px;margin:0 auto;padding:40px 20px}
+.mode-title{font-size:22px;color:#FFE234;text-align:center;margin-bottom:6px}
+.mode-sub{font-size:12px;color:rgba(255,255,255,.38);text-align:center;margin-bottom:26px}
+.mode-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mode-card{background:rgba(0,0,0,.32);border:1px solid rgba(255,226,52,.18);border-radius:14px;padding:24px;cursor:pointer;transition:.15s;text-align:center}
+.mode-card:hover{border-color:#FFE234;background:rgba(255,226,52,.05)}
+.mode-icon{font-size:32px;margin-bottom:10px}
+.mode-lbl{font-size:15px;font-weight:700;color:#FFE234;margin-bottom:6px}
+.mode-desc{font-size:11px;color:rgba(255,255,255,.43);line-height:1.65}
+/* Setup */
+.setup-wrap{max-width:720px;margin:0 auto;padding:28px 20px}
+.setup-card{background:rgba(0,0,0,.32);border-radius:16px;padding:24px;border:1px solid rgba(255,226,52,.15)}
+.setup-ttl{font-size:15px;color:#FFE234;margin-bottom:12px}
+.count-row{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.cnt-btn{width:34px;height:34px;border-radius:7px;background:rgba(255,255,255,.1);color:#fff;font-size:18px;font-weight:700;transition:.1s}
+.cnt-btn:hover{background:rgba(255,226,52,.2);color:#FFE234}
+.cnt-inp{width:68px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);border-radius:7px;padding:5px;text-align:center;font-size:19px;font-weight:700;color:#fff}
+.bracket-hint{font-size:11px;color:rgba(255,226,52,.65);margin-bottom:18px;padding:7px 10px;background:rgba(255,226,52,.05);border-radius:7px;border:1px solid rgba(255,226,52,.12)}
+.team-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:20px;max-height:360px;overflow-y:auto;padding-right:4px}
+.tiwrap{display:flex;align-items:center;gap:6px}
+.tinum{width:24px;height:24px;border-radius:50%;background:#0248BB;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#FFE234;flex-shrink:0}
+.tiinp{flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.17);border-radius:7px;padding:6px 9px;color:#fff;font-size:13px}
+.tiinp:focus{border-color:#FFE234}
+.tiinp::placeholder{color:rgba(255,255,255,.25)}
+.start-btn{width:100%;padding:13px;border-radius:11px;background:#FFE234;color:#0248BB;font-size:16px;font-weight:700;transition:.15s}
+.start-btn:hover{background:#fff}
+/* ═══ Shared tournament layout ═══ */
+.tn-wrap{display:flex;height:calc(100vh - 50px)}
+/* Sidebar */
+.sb{width:180px;flex-shrink:0;background:rgba(0,0,0,.44);border-right:1px solid rgba(255,226,52,.12);padding:10px;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+.sb-ttl{font-size:10px;color:#FFE234;font-weight:700;padding-bottom:5px;border-bottom:1px solid rgba(255,226,52,.13);margin-bottom:2px}
+.sb-team{padding:5px 9px;border-radius:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:12px;cursor:grab;user-select:none;display:flex;align-items:center;gap:5px;transition:.1s}
+.sb-team::before{content:'\2807';color:rgba(255,255,255,.27);font-size:12px;flex-shrink:0}
+.sb-team:hover{background:rgba(255,226,52,.13);border-color:#FFE234}
+.sb-team:hover::before{color:#FFE234}
+.sb-team.drag-src{opacity:.3}
+.sb-empty{font-size:10px;color:rgba(255,255,255,.27);text-align:center;padding:6px 0}
+/* Bye slots */
+.bye-slot{padding:5px 8px;border-radius:6px;border:1px dashed rgba(100,160,255,.28);font-size:11px;min-height:30px;display:flex;align-items:center;justify-content:space-between;transition:.1s;background:rgba(255,255,255,.02);margin-bottom:4px}
+.bye-slot.filled{background:rgba(100,160,255,.07);border-color:rgba(100,160,255,.45);cursor:grab}
+.bye-slot.drag-over{background:rgba(255,226,52,.12) !important;border-color:#FFE234 !important}
+.bye-slot-name{font-size:11px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rmv-btn{background:none;color:rgba(255,100,100,.65);font-size:15px;font-weight:700;padding:0 2px;line-height:1;flex-shrink:0;transition:.1s}
+.rmv-btn:hover{color:#ff6060}
+/* Stage picker (brawl mode) */
+.stage-picker{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
+.spick{padding:4px 8px;border-radius:5px;font-size:10px;font-weight:700;background:rgba(255,255,255,.06);color:rgba(255,255,255,.43);border:1px solid transparent;transition:.1s}
+.spick.active{background:rgba(255,226,52,.15);color:#FFE234;border-color:rgba(255,226,52,.33)}
+.spick.done{color:rgba(120,210,120,.75)}
+.spick:hover:not(.active){background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+/* Sidebar actions */
+.sb-actions{margin-top:auto;display:flex;flex-direction:column;gap:5px;padding-top:8px;border-top:1px solid rgba(255,255,255,.05)}
+.sb-btn{width:100%;padding:7px;border-radius:6px;font-size:11px;font-weight:700;transition:.1s}
+.sb-btn.prim{background:#FFE234;color:#0248BB}
+.sb-btn.prim:hover{background:#fff}
+.sb-btn.ghost{background:rgba(255,255,255,.06);color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.1)}
+.sb-btn.ghost:hover{background:rgba(255,255,255,.12)}
+.sb-btn.danger{background:rgba(255,50,50,.07);color:#ff9090;border:1px solid rgba(255,50,50,.17)}
+.sb-btn.danger:hover{background:rgba(255,50,50,.14)}
+.pj-info{font-size:10px;color:rgba(255,226,52,.68);padding:5px 8px;background:rgba(255,226,52,.05);border-radius:5px}
+/* Canvas / Scroll */
+.bk-scroll{flex:1;overflow:auto;padding:16px}
+/* ═══ Match box (absolute, shared) ═══ */
+.mcard{position:absolute;border-radius:7px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:rgba(5,15,45,.82);transition:border-color .1s}
+.mcard.has-result{border-color:rgba(255,226,52,.22)}
+.mcard-hdr{display:flex;align-items:center;justify-content:space-between;padding:3px 6px;background:rgba(0,0,0,.22);border-bottom:1px solid rgba(255,255,255,.04)}
+.mcard-lbl{font-size:9px;color:rgba(255,255,255,.32)}
+.medit-btn{background:none;color:rgba(255,255,255,.3);font-size:10px;padding:2px 4px;border-radius:3px;transition:.1s}
+.medit-btn:hover{background:rgba(255,226,52,.14);color:#FFE234}
+.mslot{display:flex;align-items:center;padding:4px 6px;gap:4px;border-bottom:1px solid rgba(255,255,255,.04);transition:background .1s;overflow:hidden}
+.mslot:last-child{border-bottom:none}
+.mslot.empty{background:rgba(255,255,255,.01)}
+.mslot.win{background:rgba(255,226,52,.09)}
+.mslot.lose{opacity:.3}
+.mslot.dov{background:rgba(255,226,52,.18) !important;outline:1px solid #FFE234}
+.slot-name{flex:1;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.slot-empty-hint{flex:1;font-size:9px;color:rgba(255,255,255,.16)}
+.slot-score{font-size:9px;font-weight:700;color:#FFE234;min-width:12px;text-align:right}
+/* Champion */
+.champ-box-gen{background:linear-gradient(135deg,#ffd000,#ff8c00);border-radius:10px;padding:10px 20px;display:inline-block;box-shadow:0 0 24px rgba(255,208,0,.4)}
+.champ-lbl-gen{font-size:10px;color:rgba(0,0,0,.42);margin-bottom:2px}
+.champ-name-gen{font-size:17px;font-weight:700;color:#3a1a00}
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:200}
+.modal-card{background:#0a1c46;border:1px solid rgba(255,226,52,.28);border-radius:13px;padding:20px;min-width:290px;max-width:365px;width:90%}
+.modal-ttl{font-size:14px;color:#FFE234;margin-bottom:14px;text-align:center}
+.wbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.wbtn{padding:10px 5px;border-radius:7px;font-size:12px;font-weight:700;background:rgba(255,255,255,.07);color:#fff;border:2px solid rgba(255,255,255,.12);transition:.15s;word-break:break-all;text-align:center}
+.wbtn:hover:not(:disabled){border-color:#FFE234;background:rgba(255,226,52,.1)}
+.wbtn.sel{background:#FFE234;color:#0248BB;border-color:#FFE234}
+.wbtn:disabled{opacity:.27;cursor:default}
+.bye-btn-m{grid-column:1/-1;padding:9px;border-radius:7px;font-size:12px;font-weight:700;background:rgba(255,255,255,.06);color:rgba(255,255,255,.52);border:1px dashed rgba(255,255,255,.2);transition:.15s}
+.bye-btn-m:hover{background:rgba(255,255,255,.12);color:#fff}
+.score-row{display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:12px}
+.sinp{width:52px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:6px;text-align:center;font-size:17px;font-weight:700;color:#fff}
+.ssep{font-size:17px;font-weight:700;color:rgba(255,255,255,.36)}
+.mbtns{display:flex;gap:7px}
+.mbtn{flex:1;padding:9px;border-radius:7px;font-size:12px;font-weight:700;transition:.15s}
+.mbtn.conf{background:#FFE234;color:#0248BB}
+.mbtn.conf:hover:not(:disabled){background:#fff}
+.mbtn.conf:disabled{opacity:.36;cursor:default}
+.mbtn.cancel{background:rgba(255,255,255,.07);color:rgba(255,255,255,.48)}
+.mbtn.cancel:hover{background:rgba(255,255,255,.12)}
+.mbtn.reset{background:rgba(255,50,50,.07);color:#ff9090;border:1px solid rgba(255,50,50,.18)}
+.mbtn.reset:hover{background:rgba(255,50,50,.14)}
+.pj-btn{display:block;width:100%;padding:9px 12px;border-radius:7px;font-size:13px;font-weight:700;background:rgba(255,255,255,.06);color:#fff;border:2px solid rgba(255,255,255,.1);text-align:left;transition:.15s;margin-bottom:6px}
+.pj-btn.sel{background:rgba(255,226,52,.13);border-color:#FFE234;color:#FFE234}
+.pj-btn:hover:not(.sel){background:rgba(255,255,255,.1)}
+@keyframes diagonalScroll{0%{background-position:0 0}100%{background-position:130px 130px}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useRef} = React;
+const SKULL_B64 = "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";
+const GOLD = '#FFE234';
+const LOSER_CLR = 'rgba(80,160,255,0.55)';
+
+/* ══════════════════════════════════════════
+   BRAWL STARS 본선 LAYOUT (Row 0=top=결승)
+══════════════════════════════════════════ */
+const BRAWL_DEFS = [
+  {id:'s16',label:'16강',matchCount:8,byeCount:4,note:'4팀 부전승 · 12팀 12강 진출'},
+  {id:'s12',label:'12강',matchCount:6,byeCount:0,note:'승자→8강 · 패자→패자전'},
+  {id:'spj',label:'패자전',matchCount:3,byeCount:0,note:'승자 중 2팀 선택'},
+  {id:'s8', label:'8강', matchCount:4,byeCount:0,note:''},
+  {id:'s4', label:'4강', matchCount:2,byeCount:0,note:''},
+  {id:'sf', label:'결승',matchCount:1,byeCount:0,note:''},
+];
+
+const BL={MW:140,MH:72,HDR:16,GX:18,GY:56,PX:76,PY:16,CH:40,CG:12,NCOLS:8};
+const BROW ={sf:0,s4:1,s8:2,spj:3,s12:4,s16:5};
+const BCOFF={sf:3.5,s4:3,s8:2,spj:5,s12:1,s16:0};
+
+function bCX(sid,pos){return BL.PX+(BCOFF[sid]+pos)*(BL.MW+BL.GX)+BL.MW/2;}
+function bTY(sid){return BL.PY+BL.CH+BL.CG+BROW[sid]*(BL.MH+BL.GY);}
+function bDims(){
+  const rightX=BL.PX+(BL.NCOLS-1)*(BL.MW+BL.GX)+BL.MW+24;
+  const h=BL.PY+BL.CH+BL.CG+6*(BL.MH+BL.GY)-BL.GY+BL.PY;
+  return{w:Math.max(1000,rightX),h};
+}
+
+function buildBrawlLines(stages,pjSel){
+  const lines=[];
+  const sm={};stages.forEach(s=>sm[s.id]=s);
+  function findM(sid,team){
+    if(!team)return null;
+    return(sm[sid]?.matches||[]).find(m=>m.teamA===team||m.teamB===team)||null;
+  }
+  function addLine(key,fs,fp,ts,tp,win){
+    const fcx=bCX(fs,fp),fty=bTY(fs);
+    const tcx=bCX(ts,tp),tby=bTY(ts)+BL.MH;
+    const mid=(fty+tby)/2;
+    lines.push({key,d:`M ${fcx} ${fty} L ${fcx} ${mid} L ${tcx} ${mid} L ${tcx} ${tby}`,win});
+  }
+  sm['s16'].matches.forEach(m=>{
+    if(m.winner){const d=findM('s12',m.winner);if(d)addLine(`16w${m.pos}`,'s16',m.pos,'s12',d.pos,true);}
+  });
+  sm['s12'].matches.forEach(m=>{
+    if(m.winner){const d=findM('s8',m.winner);if(d)addLine(`12w${m.pos}`,'s12',m.pos,'s8',d.pos,true);}
+    if(m.loser){const d=findM('spj',m.loser);if(d)addLine(`12l${m.pos}`,'s12',m.pos,'spj',d.pos,false);}
+  });
+  sm['spj'].matches.forEach(m=>{
+    if(m.winner&&pjSel.includes(m.winner)){const d=findM('s8',m.winner);if(d)addLine(`pjw${m.pos}`,'spj',m.pos,'s8',d.pos,true);}
+  });
+  sm['s8'].matches.forEach(m=>{
+    if(m.winner){const d=findM('s4',m.winner);if(d)addLine(`8w${m.pos}`,'s8',m.pos,'s4',d.pos,true);}
+  });
+  sm['s4'].matches.forEach(m=>{
+    if(m.winner){const d=findM('sf',m.winner);if(d)addLine(`4w${m.pos}`,'s4',m.pos,'sf',d.pos,true);}
+  });
+  if(sm['sf'].matches[0]?.winner){
+    const fcx=bCX('sf',0),fty=bTY('sf');
+    lines.push({key:'champ',d:`M ${fcx} ${fty} L ${fcx} ${BL.PY+BL.CH}`,win:true});
+  }
+  return lines;
+}
+
+function mkBrawlMatch(sid,pos){
+  return{id:`${sid}_m${pos}`,stageId:sid,pos,teamA:null,teamB:null,winner:null,loser:null,scoreA:'',scoreB:'',bye:false};
+}
+function initBrawlStages(){
+  return BRAWL_DEFS.map(def=>({
+    ...def,
+    byeTeams:Array.from({length:def.byeCount||0},()=>null),
+    matches:Array.from({length:def.matchCount},(_,i)=>mkBrawlMatch(def.id,i))
+  }));
+}
+function getBrawlAvail(idx,stages,allTeams,pjSel){
+  const s=stages[idx];
+  const used=new Set();
+  s.matches.forEach(m=>{if(m.teamA)used.add(m.teamA);if(m.teamB)used.add(m.teamB);});
+  let pool=[];
+  if(idx===0){s.byeTeams.forEach(t=>{if(t)used.add(t);});pool=allTeams;}
+  else if(idx===1){const s0=stages[0];pool=[...s0.byeTeams.filter(Boolean),...s0.matches.map(m=>m.winner).filter(Boolean)];}
+  else if(idx===2){pool=stages[1].matches.map(m=>m.loser).filter(Boolean);}
+  else if(idx===3){pool=[...stages[1].matches.map(m=>m.winner).filter(Boolean),...(pjSel||[])];}
+  else if(idx===4){pool=stages[3].matches.map(m=>m.winner).filter(Boolean);}
+  else if(idx===5){pool=stages[4].matches.map(m=>m.winner).filter(Boolean);}
+  return pool.filter(t=>!used.has(t));
+}
+function brawlDone(stage){return stage.matches.every(m=>m.winner);}
+
+/* ══════════════════════════════════════════
+   GENERAL BRACKET HELPERS
+══════════════════════════════════════════ */
+function nextPow2(n){let p=1;while(p<n)p<<=1;return p;}
+
+function getSizes(nLeaf){
+  if(nLeaf<=4)  return{MW:160,MH:56,HDR:18,GX:48,GY:80,PX:32,PY:24,CH:44,CG:16};
+  if(nLeaf<=8)  return{MW:150,MH:54,HDR:17,GX:40,GY:72,PX:28,PY:22,CH:42,CG:14};
+  if(nLeaf<=16) return{MW:130,MH:50,HDR:16,GX:30,GY:64,PX:24,PY:20,CH:40,CG:12};
+  return          {MW:110,MH:48,HDR:15,GX:22,GY:56,PX:20,PY:18,CH:38,CG:10};
+}
+function gMatchCX(round,pos,numRounds,S){
+  const LW=S.MW+S.GX;
+  if(round===numRounds-1)return S.PX+pos*LW+S.MW/2;
+  const l=gMatchCX(round+1,pos*2,numRounds,S);
+  const r=gMatchCX(round+1,pos*2+1,numRounds,S);
+  return(l+r)/2;
+}
+function gMatchTY(round,S){return S.PY+S.CH+S.CG+round*(S.MH+S.GY);}
+function gBracketDims(numRounds,S){
+  const nLeaf=1<<(numRounds-1);
+  const LW=S.MW+S.GX;
+  const w=S.PX*2+nLeaf*LW-S.GX;
+  const h=S.PY+S.CH+S.CG+numRounds*(S.MH+S.GY)-S.GY+S.PY;
+  return{w:Math.max(380,w),h};
+}
+function gBuildLines(matches,numRounds,S){
+  const lines=[];
+  for(let r=1;r<numRounds;r++){
+    const count=1<<r;
+    for(let p=0;p<count;p++){
+      const m=matches.find(x=>x.round===r&&x.pos===p);
+      const par=matches.find(x=>x.round===r-1&&x.pos===(p>>1));
+      if(!m||!par)continue;
+      const cx=gMatchCX(r,p,numRounds,S);
+      const ty=gMatchTY(r,S);
+      const pcx=gMatchCX(r-1,p>>1,numRounds,S);
+      const pby=gMatchTY(r-1,S)+S.MH;
+      const midY=(pby+ty)/2;
+      const parSlot=p%2===0?par.teamA:par.teamB;
+      const isWin=!!(m.winner&&m.winner===parSlot&&(!par.winner||par.winner===m.winner));
+      lines.push({key:`${r}-${p}`,d:`M ${pcx} ${pby} L ${pcx} ${midY} L ${cx} ${midY} L ${cx} ${ty}`,isWin});
+    }
+  }
+  const fin=matches.find(x=>x.round===0&&x.pos===0);
+  const fcx=gMatchCX(0,0,numRounds,S);
+  lines.push({key:'champ',d:`M ${fcx} ${S.PY+S.CH} L ${fcx} ${gMatchTY(0,S)}`,isWin:!!(fin&&fin.winner)});
+  return lines;
+}
+function initGenMatches(numTeams){
+  const P=nextPow2(numTeams);
+  const numRounds=Math.log2(P);
+  const ms=[];
+  for(let r=0;r<numRounds;r++){
+    for(let p=0;p<(1<<r);p++){
+      ms.push({id:`r${r}p${p}`,round:r,pos:p,teamA:null,teamB:null,winner:null,scoreA:'',scoreB:'',bye:false});
+    }
+  }
+  return{matches:ms,numRounds};
+}
+
+/* ══════════════════════════════════════════
+   SHARED COMPONENTS
+══════════════════════════════════════════ */
+function BgDecor(){
+  const url='url("data:image/png;base64,'+SKULL_B64+'")';
+  return(
+    <div style={{position:'fixed',inset:0,zIndex:-1,pointerEvents:'none'}}>
+      <div style={{position:'absolute',inset:0,background:'#0248BB'}}/>
+      <div style={{position:'absolute',inset:0,backgroundImage:url,backgroundRepeat:'repeat',backgroundSize:'65px 65px',opacity:.08,animation:'diagonalScroll 8s linear infinite'}}/>
+    </div>
+  );
+}
+function Header({onBack,subtitle}){
+  return(
+    <div className="hdr">
+      {onBack&&<button onClick={onBack} style={{background:'none',color:'#FFE234',fontSize:18,padding:'0 5px'}}>&#8592;</button>}
+      <span className="bhs hdr-title">BRAWL STARS 토너먼트</span>
+      <span className="hdr-sub">{subtitle||'2026'}</span>
+    </div>
+  );
+}
+
+function ResultModal({match,onConfirm,onBye,onReset,onClose}){
+  const [winner,setWinner]=useState(match.winner||null);
+  const [sA,setSA]=useState(match.scoreA||'');
+  const [sB,setSB]=useState(match.scoreB||'');
+  const hasA=!!match.teamA,hasB=!!match.teamB;
+  const onlyOne=(hasA&&!hasB)||(hasB&&!hasA);
+  return(
+    <div className="modal-bg" onClick={onClose}>
+      <div className="modal-card" onClick={e=>e.stopPropagation()}>
+        <div className="modal-ttl">경기 결과 입력</div>
+        <div className="wbtns">
+          <button className={'wbtn'+(winner===match.teamA?' sel':'')} disabled={!hasA} onClick={()=>hasA&&setWinner(match.teamA)}>{match.teamA||'(미배정)'}</button>
+          <button className={'wbtn'+(winner===match.teamB?' sel':'')} disabled={!hasB} onClick={()=>hasB&&setWinner(match.teamB)}>{match.teamB||'(미배정)'}</button>
+          {onlyOne&&<button className="bye-btn-m" onClick={onBye}>&#127960; 부전승 처리</button>}
+        </div>
+        {!onlyOne&&(
+          <div className="score-row">
+            <input className="sinp" type="number" min="0" value={sA} onChange={e=>setSA(e.target.value)} placeholder="0"/>
+            <span className="ssep">:</span>
+            <input className="sinp" type="number" min="0" value={sB} onChange={e=>setSB(e.target.value)} placeholder="0"/>
+          </div>
+        )}
+        <div className="mbtns">
+          {match.winner&&<button className="mbtn reset" onClick={onReset}>초기화</button>}
+          <button className="mbtn cancel" onClick={onClose}>취소</button>
+          {!onlyOne&&<button className="mbtn conf" disabled={!winner} onClick={()=>winner&&onConfirm({winner,scoreA:sA,scoreB:sB})}>확인</button>}
+        </div>
+      </div>
+    </div>
+  );
+}
+function PJModal({winners,selected,onToggle,onConfirm,onClose}){
+  return(
+    <div className="modal-bg" onClick={onClose}>
+      <div className="modal-card" onClick={e=>e.stopPropagation()}>
+        <div className="modal-ttl">8강 진출팀 선택</div>
+        <div style={{fontSize:11,color:'rgba(255,255,255,.43)',marginBottom:12,textAlign:'center'}}>패자전 승자 3팀 중 <b style={{color:GOLD}}>2팀</b> 선택</div>
+        {winners.map(t=>(
+          <button key={t} className={'pj-btn'+(selected.includes(t)?' sel':'')} onClick={()=>onToggle(t)}>
+            {selected.includes(t)?'✓ ':''}{t}
+          </button>
+        ))}
+        <div className="mbtns" style={{marginTop:4}}>
+          <button className="mbtn cancel" onClick={onClose}>취소</button>
+          <button className="mbtn conf" disabled={selected.length!==2} onClick={onConfirm}>확인 ({selected.length}/2)</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════
+   MODE SELECT
+══════════════════════════════════════════ */
+function ModeSelect({onSelect}){
+  return(
+    <div className="mode-wrap">
+      <div className="bhs mode-title">토너먼트 모드 선택</div>
+      <div className="mode-sub">진행할 방식을 선택하세요</div>
+      <div className="mode-cards">
+        <div className="mode-card" onClick={()=>onSelect('brawl')}>
+          <div className="mode-icon">&#9876;</div>
+          <div className="bhs mode-lbl">브롤스타즈 본선</div>
+          <div className="mode-desc">20팀 고정 · 6단계 스테이지<br/>16강→12강→패자전→8강→4강→결승<br/>스테이지별 자유 대진 배정</div>
+        </div>
+        <div className="mode-card" onClick={()=>onSelect('general')}>
+          <div className="mode-icon">&#127942;</div>
+          <div className="bhs mode-lbl">일반 토너먼트</div>
+          <div className="mode-desc">4~64팀 · 싱글 엘리미네이션<br/>자동 브라켓 생성<br/>드래그앤드랍 대진 배정</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════
+   GENERAL SETUP + BRACKET VIEW
+══════════════════════════════════════════ */
+function GeneralSetup({onStart}){
+  const [count,setCount]=useState(8);
+  const [names,setNames]=useState(()=>Array.from({length:8},(_,i)=>`${i+1}팀`));
+  const changeCount=n=>{
+    const nc=Math.max(4,Math.min(64,isNaN(n)?count:n));
+    setCount(nc);
+    setNames(prev=>Array.from({length:nc},(_,i)=>i<prev.length?prev[i]:`${i+1}팀`));
+  };
+  const setN=(i,v)=>setNames(ns=>ns.map((x,j)=>j===i?v:x));
+  const bSize=nextPow2(count);
+  const byes=bSize-count;
+  return(
+    <div className="setup-wrap">
+      <div className="setup-card">
+        <div className="setup-ttl bhs">참가 팀 수</div>
+        <div className="count-row">
+          <button className="cnt-btn" onClick={()=>changeCount(count-1)}>&#8722;</button>
+          <input className="cnt-inp" type="number" min="4" max="64" value={count} onChange={e=>changeCount(parseInt(e.target.value,10))}/>
+          <button className="cnt-btn" onClick={()=>changeCount(count+1)}>&#43;</button>
+        </div>
+        <div className="bracket-hint">&#9654; 브라켓: {bSize}강 &nbsp;|&nbsp; 부전승: {byes}팀{byes>0&&' (일부 팀 자동 진출)'}</div>
+        <div className="setup-ttl bhs" style={{marginBottom:10}}>팀 이름</div>
+        <div className="team-grid">
+          {names.map((n,i)=>(
+            <div key={i} className="tiwrap">
+              <div className="tinum">{i+1}</div>
+              <input className="tiinp" value={n} onChange={e=>setN(i,e.target.value)} placeholder={`${i+1}팀`}/>
+            </div>
+          ))}
+        </div>
+        <button className="start-btn bhs" onClick={()=>onStart({teams:names.map((n,i)=>n.trim()||`${i+1}팀`)})}>대진표 만들기 &#8594;</button>
+      </div>
+    </div>
+  );
+}
+
+function GenMatchBox({match,numRounds,S,onDrop,onEditClick,onRemove,dragTeam,setDragTeam}){
+  const [ovA,setOvA]=useState(false);
+  const [ovB,setOvB]=useState(false);
+  const cx=gMatchCX(match.round,match.pos,numRounds,S);
+  const ty=gMatchTY(match.round,S);
+  const hw=match.winner;
+  const startDrag=(e,slot)=>{
+    const name=slot==='A'?match.teamA:match.teamB;
+    if(!name||hw)return e.preventDefault();
+    setDragTeam({name,fromMatchId:match.id,fromSlot:slot});
+    e.dataTransfer.effectAllowed='move';e.stopPropagation();
+  };
+  const onDO=(e,s)=>{e.preventDefault();s==='A'?setOvA(true):setOvB(true);};
+  const onDL=(s)=>{s==='A'?setOvA(false):setOvB(false);};
+  const onDS=(e,slot)=>{e.preventDefault();setOvA(false);setOvB(false);if(!dragTeam)return;onDrop(match.id,slot,dragTeam);};
+  const sc=(team,isWin,ov)=>{let c='mslot';if(!team)c+=' empty';else if(hw)c+=hw===team?' win':' lose';if(ov)c+=' dov';return c;};
+  return(
+    <div className={'mcard'+(hw?' has-result':'')}
+      style={{left:cx-S.MW/2,top:ty,width:S.MW,height:S.MH,display:'flex',flexDirection:'column'}}>
+      <div className="mcard-hdr" style={{height:S.HDR,flexShrink:0}}>
+        <span className="mcard-lbl" style={{fontSize:S.HDR-8}}>R{numRounds-match.round}M{match.pos+1}</span>
+        <button className="medit-btn" style={{fontSize:S.HDR-7}} onClick={onEditClick}>&#9998;</button>
+      </div>
+      <div className={sc(match.teamA,hw===match.teamA,ovA)} style={{flex:'1 1 0',minHeight:0}}
+        draggable={!!(match.teamA&&!hw)} onDragStart={e=>startDrag(e,'A')} onDragOver={e=>onDO(e,'A')} onDragLeave={()=>onDL('A')} onDrop={e=>onDS(e,'A')}>
+        {match.teamA?(<>
+          {hw===match.teamA&&<span style={{fontSize:9,flexShrink:0}}>&#127942;</span>}
+          <span className="slot-name" style={{fontSize:S.MH<=48?10:11}}>{match.teamA}</span>
+          {hw&&match.scoreA!==''&&!match.bye&&<span className="slot-score">{match.scoreA}</span>}
+          {!hw&&<button className="rmv-btn" onClick={e=>{e.stopPropagation();onRemove(match.id,'A');}}>&#8722;</button>}
+        </>):<span className="slot-empty-hint">드래그</span>}
+      </div>
+      <div className={sc(match.teamB,hw===match.teamB,ovB)} style={{flex:'1 1 0',minHeight:0,borderBottom:'none'}}
+        draggable={!!(match.teamB&&!hw)} onDragStart={e=>startDrag(e,'B')} onDragOver={e=>onDO(e,'B')} onDragLeave={()=>onDL('B')} onDrop={e=>onDS(e,'B')}>
+        {match.teamB?(<>
+          {hw===match.teamB&&<span style={{fontSize:9,flexShrink:0}}>&#127942;</span>}
+          <span className="slot-name" style={{fontSize:S.MH<=48?10:11}}>{match.teamB}</span>
+          {hw&&match.scoreB!==''&&!match.bye&&<span className="slot-score">{match.scoreB}</span>}
+          {!hw&&<button className="rmv-btn" onClick={e=>{e.stopPropagation();onRemove(match.id,'B');}}>&#8722;</button>}
+        </>):<span className="slot-empty-hint">드래그</span>}
+      </div>
+    </div>
+  );
+}
+
+function GeneralBracketView({config,matches,setMatches,numRounds}){
+  const {teams}=config;
+  const nLeaf=1<<(numRounds-1);
+  const S=getSizes(nLeaf);
+  const dims=gBracketDims(numRounds,S);
+  const lines=gBuildLines(matches,numRounds,S);
+  const bracketRef=useRef(null);
+  const [dragTeam,setDragTeam]=useState(null);
+  const [modal,setModal]=useState(null);
+  const [ovSb,setOvSb]=useState(false);
+
+  const used=new Set();
+  matches.forEach(m=>{if(m.teamA)used.add(m.teamA);if(m.teamB)used.add(m.teamB);});
+  const unassigned=teams.filter(t=>!used.has(t));
+  const finalM=matches.find(m=>m.round===0&&m.pos===0);
+  const champion=finalM?.winner||null;
+  const fcx=gMatchCX(0,0,numRounds,S);
+  const champW=Math.max(120,S.MW+20);
+
+  function propagate(next,matchId,winner){
+    const m=next.find(x=>x.id===matchId);if(!m||m.round===0)return;
+    const par=next.find(x=>x.round===m.round-1&&x.pos===(m.pos>>1));
+    if(!par||par.winner)return;
+    if(m.pos%2===0)par.teamA=winner;else par.teamB=winner;
+  }
+  function unpropagate(next,matchId){
+    const m=next.find(x=>x.id===matchId);if(!m||m.round===0)return;
+    const par=next.find(x=>x.round===m.round-1&&x.pos===(m.pos>>1));
+    if(!par||par.winner)return;
+    if(m.pos%2===0)par.teamA=null;else par.teamB=null;
+  }
+
+  const onMatchDrop=(matchId,slot,dragged)=>{
+    setMatches(prev=>{
+      const next=prev.map(m=>({...m}));
+      const tgt=next.find(m=>m.id===matchId);
+      if(!tgt||tgt.winner)return prev;
+      const k=slot==='A'?'teamA':'teamB';const evicted=tgt[k];tgt[k]=dragged.name;
+      if(dragged.fromMatchId){const src=next.find(m=>m.id===dragged.fromMatchId);if(src&&!src.winner){const sk=dragged.fromSlot==='A'?'teamA':'teamB';src[sk]=evicted||null;}}
+      return next;
+    });setDragTeam(null);
+  };
+  const onSbDrop=e=>{
+    e.preventDefault();setOvSb(false);
+    if(!dragTeam||!dragTeam.fromMatchId){setDragTeam(null);return;}
+    setMatches(prev=>{
+      const next=prev.map(m=>({...m}));
+      const src=next.find(m=>m.id===dragTeam.fromMatchId);
+      if(src&&!src.winner){const k=dragTeam.fromSlot==='A'?'teamA':'teamB';src[k]=null;}
+      return next;
+    });setDragTeam(null);
+  };
+  const removeSlot=(matchId,slot)=>{
+    setMatches(prev=>{const next=prev.map(m=>({...m}));const m=next.find(x=>x.id===matchId);if(!m||m.winner)return prev;if(slot==='A')m.teamA=null;else m.teamB=null;return next;});
+  };
+  const autoFill=(shuffle)=>{
+    let list=[...teams];if(shuffle)list=list.sort(()=>Math.random()-.5);
+    setMatches(prev=>{
+      const next=prev.map(m=>({...m,teamA:null,teamB:null,winner:null,scoreA:'',scoreB:'',bye:false}));
+      const leafMs=next.filter(m=>m.round===numRounds-1).sort((a,b)=>a.pos-b.pos);
+      let ti=0;leafMs.forEach(lm=>{lm.teamA=ti<list.length?list[ti++]:null;lm.teamB=ti<list.length?list[ti++]:null;});
+      return next;
+    });
+  };
+  const clearBracket=()=>setMatches(prev=>prev.map(m=>({...m,teamA:null,teamB:null,winner:null,scoreA:'',scoreB:'',bye:false})));
+  const confirmResult=({winner,scoreA,scoreB})=>{
+    setMatches(prev=>{const next=prev.map(m=>({...m}));const m=next.find(x=>x.id===modal.id);if(!m)return prev;m.winner=winner;m.scoreA=scoreA;m.scoreB=scoreB;m.bye=false;propagate(next,m.id,winner);return next;});setModal(null);
+  };
+  const byeResult=()=>{
+    setMatches(prev=>{const next=prev.map(m=>({...m}));const m=next.find(x=>x.id===modal.id);if(!m)return prev;const bw=m.teamA||m.teamB;m.winner=bw;m.scoreA='';m.scoreB='';m.bye=true;propagate(next,m.id,bw);return next;});setModal(null);
+  };
+  const resetResult=()=>{
+    setMatches(prev=>{const next=prev.map(m=>({...m}));const m=next.find(x=>x.id===modal.id);if(!m)return prev;unpropagate(next,m.id);m.winner=null;m.scoreA='';m.scoreB='';m.bye=false;return next;});setModal(null);
+  };
+  const downloadImage=()=>{
+    if(!bracketRef.current)return;
+    html2canvas(bracketRef.current,{backgroundColor:'#02153a',scale:2,useCORS:true}).then(c=>{const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='bracket.png';a.click();});
+  };
+
+  return(
+    <div className="tn-wrap">
+      <div className="sb" onDragOver={e=>{e.preventDefault();setOvSb(true);}} onDragLeave={()=>setOvSb(false)} onDrop={onSbDrop} style={ovSb?{background:'rgba(255,226,52,.05)'}:{}}>
+        <div className="sb-ttl">미배정 ({unassigned.length}/{teams.length})</div>
+        {unassigned.length===0?<div className="sb-empty">모두 배정됨</div>
+          :unassigned.map(t=>(
+            <div key={t} className={'sb-team'+(dragTeam?.name===t&&!dragTeam?.fromMatchId?' drag-src':'')}
+              draggable onDragStart={e=>{setDragTeam({name:t});e.dataTransfer.effectAllowed='move';}} onDragEnd={()=>setDragTeam(null)}>{t}</div>
+          ))}
+        <div className="sb-actions">
+          <button className="sb-btn prim" onClick={()=>autoFill(false)}>&#9654; 자동 배치</button>
+          <button className="sb-btn ghost" onClick={()=>autoFill(true)}>&#8635; 섞기</button>
+          <button className="sb-btn danger" onClick={clearBracket}>&#10005; 초기화</button>
+          <button className="sb-btn ghost" onClick={downloadImage}>&#128247; 이미지 저장</button>
+        </div>
+      </div>
+      <div className="bk-scroll">
+        <div ref={bracketRef} style={{position:'relative',width:dims.w,height:dims.h,background:'#02153a',margin:'0 auto'}}>
+          <svg style={{position:'absolute',top:0,left:0,pointerEvents:'none'}} width={dims.w} height={dims.h}>
+            {lines.map(l=>(
+              <path key={l.key} d={l.d} fill="none" stroke={l.isWin?GOLD:'rgba(255,255,255,.13)'}
+                strokeWidth={l.isWin?3:1.5} strokeLinecap="round" strokeLinejoin="round"/>
+            ))}
+          </svg>
+          <div style={{position:'absolute',top:S.PY,left:fcx-champW/2,width:champW,display:'flex',alignItems:'center',justifyContent:'center'}}>
+            {champion
+              ?<div className="champ-box-gen"><div className="champ-lbl-gen">&#127942; 우승</div><div className="champ-name-gen bhs">{champion}</div></div>
+              :<div style={{height:S.CH,width:champW,border:'2px dashed rgba(255,208,0,.3)',borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,color:'rgba(255,208,0,.38)'}}>&#127942; 우승팀</div>}
+          </div>
+          {matches.map(m=>(
+            <GenMatchBox key={m.id} match={m} numRounds={numRounds} S={S}
+              onDrop={onMatchDrop} onEditClick={()=>setModal({...m})}
+              onRemove={removeSlot} dragTeam={dragTeam} setDragTeam={setDragTeam}/>
+          ))}
+        </div>
+      </div>
+      {modal&&<ResultModal match={modal} onConfirm={confirmResult} onBye={byeResult} onReset={resetResult} onClose={()=>setModal(null)}/>}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════
+   BRAWL SETUP
+══════════════════════════════════════════ */
+function BrawlSetup({onStart}){
+  const [names,setNames]=useState(()=>Array.from({length:20},(_,i)=>`${i+1}팀`));
+  const setN=(i,v)=>setNames(ns=>ns.map((x,j)=>j===i?v:x));
+  return(
+    <div className="setup-wrap">
+      <div className="setup-card">
+        <div className="setup-ttl bhs">팀 이름 등록 <span style={{fontSize:12,color:'rgba(255,255,255,.33)',fontFamily:'Noto Sans KR'}}>(20팀 고정)</span></div>
+        <div className="team-grid">
+          {names.map((n,i)=>(
+            <div key={i} className="tiwrap">
+              <div className="tinum">{i+1}</div>
+              <input className="tiinp" value={n} onChange={e=>setN(i,e.target.value)} placeholder={`${i+1}팀`}/>
+            </div>
+          ))}
+        </div>
+        <button className="start-btn bhs" onClick={()=>onStart(names.map((n,i)=>n.trim()||`${i+1}팀`))}>토너먼트 시작 &#8594;</button>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════
+   BRAWL TOURNAMENT VIEW (visual bracket)
+══════════════════════════════════════════ */
+function ByeSlot({team,byeIdx,onDrop,onRemove,dragTeam,setDragTeam}){
+  const [ov,setOv]=useState(false);
+  return(
+    <div className={'bye-slot'+(team?' filled':'')+(ov?' drag-over':'')}
+      draggable={!!team}
+      onDragStart={e=>{if(!team)return e.preventDefault();setDragTeam({name:team,fromBye:byeIdx});e.dataTransfer.effectAllowed='move';e.stopPropagation();}}
+      onDragEnd={()=>setDragTeam(null)}
+      onDragOver={e=>{e.preventDefault();setOv(true);}} onDragLeave={()=>setOv(false)}
+      onDrop={e=>{e.preventDefault();setOv(false);if(dragTeam)onDrop(byeIdx,dragTeam);}}>
+      {team?(<><span className="bye-slot-name">{team}</span><button className="rmv-btn" onClick={e=>{e.stopPropagation();onRemove(byeIdx);}}>&#8722;</button></>)
+        :<span style={{fontSize:9,color:'rgba(255,255,255,.2)'}}>여기에 드래그</span>}
+    </div>
+  );
+}
+
+function BrawlMatchBox({match,onDrop,onEdit,onRemove,dragTeam,setDragTeam}){
+  const [ovA,setOvA]=useState(false);
+  const [ovB,setOvB]=useState(false);
+  const hw=match.winner;
+  const cx=bCX(match.stageId,match.pos);
+  const ty=bTY(match.stageId);
+
+  const startDrag=(e,slot)=>{
+    const name=slot==='A'?match.teamA:match.teamB;
+    if(!name||hw)return e.preventDefault();
+    setDragTeam({name,fromMatchId:match.id,fromSlot:slot});
+    e.dataTransfer.effectAllowed='move';e.stopPropagation();
+  };
+  const onDO=(e,s)=>{e.preventDefault();s==='A'?setOvA(true):setOvB(true);};
+  const onDL=(s)=>{s==='A'?setOvA(false):setOvB(false);};
+  const onDS=(e,slot)=>{e.preventDefault();setOvA(false);setOvB(false);if(!dragTeam)return;onDrop(match.id,slot,dragTeam);};
+  const sc=(team,isWin,ov)=>{let c='mslot';if(!team)c+=' empty';else if(hw)c+=hw===team?' win':' lose';if(ov)c+=' dov';return c;};
+
+  return(
+    <div className={'mcard'+(hw?' has-result':'')} style={{left:cx-BL.MW/2,top:ty,width:BL.MW,height:BL.MH,display:'flex',flexDirection:'column'}}>
+      <div className="mcard-hdr" style={{height:BL.HDR,flexShrink:0}}>
+        <span className="mcard-lbl">M{match.pos+1}</span>
+        <button className="medit-btn" onClick={()=>onEdit(match)}>&#9998;</button>
+      </div>
+      <div className={sc(match.teamA,hw===match.teamA,ovA)} style={{flex:'1 1 0',minHeight:0}}
+        draggable={!!(match.teamA&&!hw)} onDragStart={e=>startDrag(e,'A')} onDragOver={e=>onDO(e,'A')} onDragLeave={()=>onDL('A')} onDrop={e=>onDS(e,'A')}>
+        {match.teamA?(<>
+          {hw===match.teamA&&<span style={{fontSize:9,flexShrink:0}}>&#127942;</span>}
+          <span className="slot-name">{match.teamA}</span>
+          {hw&&match.scoreA!==''&&!match.bye&&<span className="slot-score">{match.scoreA}</span>}
+          {!hw&&<button className="rmv-btn" onClick={e=>{e.stopPropagation();onRemove(match.id,'A');}}>&#8722;</button>}
+        </>):<span className="slot-empty-hint">드래그</span>}
+      </div>
+      <div className={sc(match.teamB,hw===match.teamB,ovB)} style={{flex:'1 1 0',minHeight:0,borderBottom:'none'}}
+        draggable={!!(match.teamB&&!hw)} onDragStart={e=>startDrag(e,'B')} onDragOver={e=>onDO(e,'B')} onDragLeave={()=>onDL('B')} onDrop={e=>onDS(e,'B')}>
+        {match.teamB?(<>
+          {hw===match.teamB&&<span style={{fontSize:9,flexShrink:0}}>&#127942;</span>}
+          <span className="slot-name">{match.teamB}</span>
+          {hw&&match.scoreB!==''&&!match.bye&&<span className="slot-score">{match.scoreB}</span>}
+          {!hw&&<button className="rmv-btn" onClick={e=>{e.stopPropagation();onRemove(match.id,'B');}}>&#8722;</button>}
+        </>):<span className="slot-empty-hint">드래그</span>}
+      </div>
+    </div>
+  );
+}
+
+function BrawlTournamentView({teams}){
+  const [stages,setStages]=useState(initBrawlStages);
+  const [activeIdx,setActiveIdx]=useState(0);
+  const [dragTeam,setDragTeam]=useState(null);
+  const [modal,setModal]=useState(null);
+  const [pjSel,setPjSel]=useState([]);
+  const [showPJ,setShowPJ]=useState(false);
+  const [ovSb,setOvSb]=useState(false);
+
+  const upd=fn=>setStages(prev=>{
+    const next=prev.map(s=>({...s,byeTeams:[...s.byeTeams],matches:s.matches.map(m=>({...m}))}));
+    fn(next);return next;
+  });
+
+  const onMatchDrop=(matchId,slot,dragged)=>{
+    upd(next=>{
+      let tgt=null;
+      for(const s of next){const m=s.matches.find(x=>x.id===matchId);if(m){tgt=m;break;}}
+      if(!tgt||tgt.winner)return;
+      const k=slot==='A'?'teamA':'teamB';const evicted=tgt[k];tgt[k]=dragged.name;
+      if(dragged.fromMatchId){
+        for(const s of next){const src=s.matches.find(x=>x.id===dragged.fromMatchId);if(src&&!src.winner){const sk=dragged.fromSlot==='A'?'teamA':'teamB';src[sk]=evicted||null;break;}}
+      }else if(dragged.fromBye!=null){next[0].byeTeams[dragged.fromBye]=evicted||null;}
+    });setDragTeam(null);
+  };
+  const onByeDrop=(byeIdx,dragged)=>{
+    upd(next=>{
+      const evicted=next[0].byeTeams[byeIdx];next[0].byeTeams[byeIdx]=dragged.name;
+      if(dragged.fromMatchId){
+        for(const s of next){const src=s.matches.find(x=>x.id===dragged.fromMatchId);if(src&&!src.winner){const sk=dragged.fromSlot==='A'?'teamA':'teamB';src[sk]=evicted||null;break;}}
+      }else if(dragged.fromBye!=null&&dragged.fromBye!==byeIdx){next[0].byeTeams[dragged.fromBye]=evicted||null;}
+    });setDragTeam(null);
+  };
+  const onSbDrop=e=>{
+    e.preventDefault();setOvSb(false);if(!dragTeam)return;
+    upd(next=>{
+      if(dragTeam.fromMatchId){
+        for(const s of next){const src=s.matches.find(x=>x.id===dragTeam.fromMatchId);if(src&&!src.winner){const k=dragTeam.fromSlot==='A'?'teamA':'teamB';src[k]=null;break;}}
+      }else if(dragTeam.fromBye!=null){next[0].byeTeams[dragTeam.fromBye]=null;}
+    });setDragTeam(null);
+  };
+  const removeSlot=(matchId,slot)=>upd(next=>{
+    for(const s of next){const m=s.matches.find(x=>x.id===matchId);if(m){if(!m.winner){if(slot==='A')m.teamA=null;else m.teamB=null;}break;}}
+  });
+  const removeBye=i=>upd(next=>{next[0].byeTeams[i]=null;});
+  const autoFill=(shuffle)=>{
+    let list=[...getBrawlAvail(activeIdx,stages,teams,pjSel)];
+    if(shuffle)list=list.sort(()=>Math.random()-.5);
+    upd(next=>{
+      const s=next[activeIdx];let ti=0;
+      if(activeIdx===0)s.byeTeams.forEach((_,i)=>{if(!s.byeTeams[i]&&ti<list.length)s.byeTeams[i]=list[ti++];});
+      s.matches.forEach(m=>{if(!m.winner){if(!m.teamA&&ti<list.length)m.teamA=list[ti++];if(!m.teamB&&ti<list.length)m.teamB=list[ti++];}});
+    });
+  };
+  const clearStage=()=>upd(next=>{
+    const s=next[activeIdx];
+    s.byeTeams=s.byeTeams.map(()=>null);
+    s.matches=s.matches.map(m=>({...m,teamA:null,teamB:null,winner:null,loser:null,scoreA:'',scoreB:'',bye:false}));
+  });
+  const confirmResult=({winner,scoreA,scoreB})=>{
+    upd(next=>{for(const s of next){const m=s.matches.find(x=>x.id===modal.id);if(m){m.winner=winner;m.loser=winner===m.teamA?m.teamB:m.teamA;m.scoreA=scoreA;m.scoreB=scoreB;m.bye=false;break;}}});setModal(null);
+  };
+  const byeResult=()=>{
+    upd(next=>{for(const s of next){const m=s.matches.find(x=>x.id===modal.id);if(m){const bw=m.teamA||m.teamB;m.winner=bw;m.loser=null;m.scoreA='';m.scoreB='';m.bye=true;break;}}});setModal(null);
+  };
+  const resetResult=()=>{
+    upd(next=>{for(const s of next){const m=s.matches.find(x=>x.id===modal.id);if(m){m.winner=null;m.loser=null;m.scoreA='';m.scoreB='';m.bye=false;break;}}});setModal(null);
+  };
+  const togglePJ=t=>setPjSel(prev=>prev.includes(t)?prev.filter(x=>x!==t):prev.length<2?[...prev,t]:prev);
+
+  const available=getBrawlAvail(activeIdx,stages,teams,pjSel);
+  const pjWinners=stages[2].matches.map(m=>m.winner).filter(Boolean);
+  const champion=stages[5].matches[0]?.winner||null;
+  const lines=buildBrawlLines(stages,pjSel);
+  const dims=bDims();
+  const sfcx=bCX('sf',0);
+  const champW=Math.max(140,BL.MW+20);
+  const poolLabels=['미배정 (20팀)','12강 대기 (12)','패자전 대기 (6)','8강 대기 (8)','4강 대기 (4)','결승 대기 (2)'];
+
+  return(
+    <div className="tn-wrap">
+      <div className="sb" onDragOver={e=>{e.preventDefault();setOvSb(true);}} onDragLeave={()=>setOvSb(false)} onDrop={onSbDrop} style={ovSb?{background:'rgba(255,226,52,.05)'}:{}}>
+        <div className="sb-ttl">스테이지 선택</div>
+        <div className="stage-picker">
+          {BRAWL_DEFS.map((def,i)=>(
+            <button key={def.id} className={'spick'+(i===activeIdx?' active':'')+(brawlDone(stages[i])&&i!==activeIdx?' done':'')} onClick={()=>setActiveIdx(i)}>
+              {brawlDone(stages[i])&&i!==activeIdx?'✓':'⚫'} {def.label}
+            </button>
+          ))}
+        </div>
+        <div className="sb-ttl" style={{marginTop:8}}>{poolLabels[activeIdx]} · {available.length} 미배정</div>
+        {available.length===0?<div className="sb-empty">모두 배정됨</div>
+          :available.map(t=>(
+            <div key={t} className={'sb-team'+(dragTeam?.name===t&&dragTeam?.fromBye==null&&!dragTeam?.fromMatchId?' drag-src':'')}
+              draggable onDragStart={e=>{setDragTeam({name:t});e.dataTransfer.effectAllowed='move';}} onDragEnd={()=>setDragTeam(null)}>{t}</div>
+          ))}
+        {activeIdx===0&&(
+          <div style={{marginTop:4}}>
+            <div className="sb-ttl">부전승 (4팀)</div>
+            {stages[0].byeTeams.map((t,i)=>(
+              <ByeSlot key={i} team={t} byeIdx={i} onDrop={onByeDrop} onRemove={removeBye} dragTeam={dragTeam} setDragTeam={setDragTeam}/>
+            ))}
+          </div>
+        )}
+        {activeIdx===2&&brawlDone(stages[2])&&(
+          <div style={{marginTop:6}}>
+            {pjSel.length===2?<div className="pj-info">선택완료: {pjSel.join(', ')}</div>
+              :<button className="sb-btn prim" onClick={()=>setShowPJ(true)}>&#127942; 8강 진출팀 선택</button>}
+          </div>
+        )}
+        {activeIdx===3&&pjSel.length===2&&<div className="pj-info" style={{marginTop:4}}>패자전: {pjSel.join(' / ')}</div>}
+        <div className="sb-actions">
+          <button className="sb-btn prim" onClick={()=>autoFill(false)}>&#9654; 자동 배치</button>
+          <button className="sb-btn ghost" onClick={()=>autoFill(true)}>&#8635; 섞기</button>
+          <button className="sb-btn danger" onClick={clearStage}>&#10005; 초기화</button>
+        </div>
+      </div>
+
+      <div className="bk-scroll">
+        <div style={{position:'relative',width:dims.w,height:dims.h,background:'#02153a',margin:'0 auto'}}>
+          <svg style={{position:'absolute',top:0,left:0,pointerEvents:'none'}} width={dims.w} height={dims.h}>
+            {BRAWL_DEFS.map(def=>(
+              <text key={def.id} x={BL.PX-8} y={bTY(def.id)+BL.MH/2+4}
+                textAnchor="end" fill="rgba(255,226,52,0.55)" fontSize="11"
+                fontFamily="Noto Sans KR,sans-serif" fontWeight="700">{def.label}</text>
+            ))}
+            {lines.map(l=>(
+              <path key={l.key} d={l.d} fill="none"
+                stroke={l.win?GOLD:LOSER_CLR}
+                strokeWidth={l.win?2.5:1.5}
+                strokeLinecap="round" strokeLinejoin="round"
+                strokeDasharray={l.win?'none':'4 3'}/>
+            ))}
+            <g transform={`translate(${dims.w-185},8)`}>
+              <line x1="0" y1="7" x2="20" y2="7" stroke={GOLD} strokeWidth="2.5" strokeLinecap="round"/>
+              <text x="24" y="11" fill="rgba(255,255,255,.4)" fontSize="9" fontFamily="Noto Sans KR">승자 진출</text>
+              <line x1="0" y1="22" x2="20" y2="22" stroke={LOSER_CLR} strokeWidth="1.5" strokeLinecap="round" strokeDasharray="4 3"/>
+              <text x="24" y="26" fill="rgba(255,255,255,.4)" fontSize="9" fontFamily="Noto Sans KR">패자→패자전</text>
+            </g>
+          </svg>
+          <div style={{position:'absolute',top:BL.PY,left:sfcx-champW/2,width:champW,display:'flex',alignItems:'center',justifyContent:'center'}}>
+            {champion
+              ?<div className="champ-box-gen"><div className="champ-lbl-gen">&#127942; 2026 본선 우승</div><div className="champ-name-gen bhs">{champion}</div></div>
+              :<div style={{height:BL.CH,width:champW,border:'2px dashed rgba(255,208,0,.28)',borderRadius:9,display:'flex',alignItems:'center',justifyContent:'center',fontSize:10,color:'rgba(255,208,0,.35)'}}>&#127942; 우승팀</div>}
+          </div>
+          {stages.map(stage=>stage.matches.map(m=>(
+            <BrawlMatchBox key={m.id} match={m}
+              onDrop={onMatchDrop} onEdit={()=>setModal({...m})}
+              onRemove={removeSlot} dragTeam={dragTeam} setDragTeam={setDragTeam}/>
+          )))}
+        </div>
+      </div>
+
+      {modal&&<ResultModal match={modal} onConfirm={confirmResult} onBye={byeResult} onReset={resetResult} onClose={()=>setModal(null)}/>}
+      {showPJ&&<PJModal winners={pjWinners} selected={pjSel} onToggle={togglePJ} onConfirm={()=>setShowPJ(false)} onClose={()=>setShowPJ(false)}/>}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════
+   APP
+══════════════════════════════════════════ */
+function App(){
+  const [screen,setScreen]=useState('mode');
+  const [mode,setMode]=useState(null);
+  const [genConfig,setGenConfig]=useState(null);
+  const [genMatches,setGenMatches]=useState([]);
+  const [genRounds,setGenRounds]=useState(0);
+  const [brawlTeams,setBrawlTeams]=useState([]);
+
+  const selectMode=m=>{setMode(m);setScreen('setup');};
+  const startGeneral=cfg=>{
+    const{matches:ms,numRounds:nr}=initGenMatches(cfg.teams.length);
+    setGenConfig(cfg);setGenMatches(ms);setGenRounds(nr);setScreen('tournament');
+  };
+  const startBrawl=ts=>{setBrawlTeams(ts);setScreen('tournament');};
+
+  const subtitle=mode==='brawl'?'본선 2026':'일반 토너먼트';
+  const goBack=screen==='tournament'?()=>setScreen('setup'):screen==='setup'?()=>{setScreen('mode');setMode(null);}:null;
+
+  return(
+    <>
+      <BgDecor/>
+      <Header onBack={goBack} subtitle={screen==='mode'?'2026':subtitle}/>
+      {screen==='mode'&&<ModeSelect onSelect={selectMode}/>}
+      {screen==='setup'&&mode==='general'&&<GeneralSetup onStart={startGeneral}/>}
+      {screen==='setup'&&mode==='brawl'&&<BrawlSetup onStart={startBrawl}/>}
+      {screen==='tournament'&&mode==='general'&&genConfig&&(
+        <GeneralBracketView config={genConfig} matches={genMatches} setMatches={setGenMatches} numRounds={genRounds}/>
+      )}
+      {screen==='tournament'&&mode==='brawl'&&(
+        <BrawlTournamentView teams={brawlTeams}/>
+      )}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
