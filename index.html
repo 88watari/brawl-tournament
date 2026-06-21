@@ -76,7 +76,7 @@ input{outline:none}
 .mcard-lbl{font-size:9px;color:rgba(255,255,255,.32)}
 .medit-btn{background:none;color:rgba(255,255,255,.3);font-size:10px;padding:2px 4px;border-radius:3px;transition:.1s}
 .medit-btn:hover{background:rgba(255,226,52,.14);color:#FFE234}
-.mslot{display:flex;align-items:center;padding:4px 6px;min-height:30px;gap:4px;border-bottom:1px solid rgba(255,255,255,.04);transition:background .1s}
+.mslot{display:flex;align-items:center;padding:4px 6px;gap:4px;border-bottom:1px solid rgba(255,255,255,.04);transition:background .1s;overflow:hidden}
 .mslot:last-child{border-bottom:none}
 .mslot.empty{background:rgba(255,255,255,.01)}
 .mslot.win{background:rgba(255,226,52,.09)}
@@ -339,8 +339,6 @@ function MatchBox({match,onDrop,onEdit,onRemove,dragTeam,setDragTeam}){
   const hw=match.winner;
   const cx=bCX(match.stageId,match.pos);
   const ty=bTY(match.stageId);
-  const slotH=(BL.MH-BL.HDR)/2;
-
   const startDrag=(e,slot)=>{
     const name=slot==='A'?match.teamA:match.teamB;
     if(!name||hw)return e.preventDefault();
@@ -364,12 +362,12 @@ function MatchBox({match,onDrop,onEdit,onRemove,dragTeam,setDragTeam}){
 
   return(
     <div className={'mcard'+(hw?' has-result':'')}
-      style={{left:cx-BL.MW/2,top:ty,width:BL.MW,height:BL.MH}}>
-      <div className="mcard-hdr" style={{height:BL.HDR}}>
+      style={{left:cx-BL.MW/2,top:ty,width:BL.MW,height:BL.MH,display:'flex',flexDirection:'column'}}>
+      <div className="mcard-hdr" style={{height:BL.HDR,flexShrink:0}}>
         <span className="mcard-lbl">M{match.pos+1}</span>
         <button className="medit-btn" onClick={()=>onEdit(match)}>&#9998;</button>
       </div>
-      <div className={sc(match.teamA,hw===match.teamA,ovA)} style={{height:slotH,borderBottom:'1px solid rgba(255,255,255,.04)'}}
+      <div className={sc(match.teamA,hw===match.teamA,ovA)} style={{flex:'1 1 0',minHeight:0}}
         draggable={!!(match.teamA&&!hw)}
         onDragStart={e=>startDrag(e,'A')} onDragOver={e=>onDO(e,'A')} onDragLeave={()=>onDL('A')} onDrop={e=>onDS(e,'A')}>
         {match.teamA?(<>
@@ -379,7 +377,7 @@ function MatchBox({match,onDrop,onEdit,onRemove,dragTeam,setDragTeam}){
           {!hw&&<button className="rmv-btn" onClick={e=>{e.stopPropagation();onRemove(match.id,'A');}}>&#8722;</button>}
         </>):<span className="slot-empty-hint">드래그</span>}
       </div>
-      <div className={sc(match.teamB,hw===match.teamB,ovB)} style={{height:slotH}}
+      <div className={sc(match.teamB,hw===match.teamB,ovB)} style={{flex:'1 1 0',minHeight:0,borderBottom:'none'}}
         draggable={!!(match.teamB&&!hw)}
         onDragStart={e=>startDrag(e,'B')} onDragOver={e=>onDO(e,'B')} onDragLeave={()=>onDL('B')} onDrop={e=>onDS(e,'B')}>
         {match.teamB?(<>
